@@ -3,7 +3,11 @@ package fastcampus.aop.part3.aop_part3_chapter4
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import fastcampus.aop.part3.aop_part3_chapter4.adapter.BookAdapter
 import fastcampus.aop.part3.aop_part3_chapter4.api.BookAPI
+import fastcampus.aop.part3.aop_part3_chapter4.databinding.ActivityMainBinding
 import fastcampus.aop.part3.aop_part3_chapter4.model.BestSellerDto
 import fastcampus.aop.part3.aop_part3_chapter4.model.SearchBooksDto
 import retrofit2.Call
@@ -14,9 +18,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var adapter: BookAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+        adapter = BookAdapter()
+
 
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -41,6 +53,8 @@ class MainActivity : AppCompatActivity() {
                         it.books.forEach { book ->
                             Log.d(TAG, book.toString())
                         }
+
+                        adapter.submitList(it.books)
                     }
                 }
 
@@ -67,6 +81,14 @@ class MainActivity : AppCompatActivity() {
                 }
 
             })
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
+//        findViewById<RecyclerView>(R.id.recyclerView).layoutManager = LinearLayoutManager(this)
+//        findViewById<RecyclerView>(R.id.recyclerView).adapter = adapter
+
+
 
     }
 
