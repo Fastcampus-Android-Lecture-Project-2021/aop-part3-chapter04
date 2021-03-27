@@ -2,9 +2,10 @@ package fastcampus.aop.part3.aop_part3_chapter4
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
+import android.view.KeyEvent
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import fastcampus.aop.part3.aop_part3_chapter4.adapter.BookAdapter
 import fastcampus.aop.part3.aop_part3_chapter4.api.BookAPI
 import fastcampus.aop.part3.aop_part3_chapter4.databinding.ActivityMainBinding
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var adapter: BookAdapter
 
+    private lateinit var service: BookAPI
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -35,7 +38,7 @@ class MainActivity : AppCompatActivity() {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
-        val service = retrofit.create(BookAPI::class.java)
+        service = retrofit.create(BookAPI::class.java)
         service.getBestSeller(getString(R.string.interpark_apikey))
             .enqueue(object: Callback<BestSellerDto> {
                 override fun onFailure(call: Call<BestSellerDto>, t: Throwable) {
@@ -60,7 +63,23 @@ class MainActivity : AppCompatActivity() {
 
             })
 
-        service.getBooksByName(getString(R.string.interpark_apikey), "달러구트")
+
+
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        binding.recyclerView.adapter = adapter
+
+        binding.searchEditText.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                search(binding.searchEditText.text.toString())
+            }
+            return@setOnKeyListener true
+        }
+
+
+    }
+
+    fun search(text: String) {
+        service.getBooksByName(getString(R.string.interpark_apikey), text)
             .enqueue(object: Callback<SearchBooksDto> {
                 override fun onFailure(call: Call<SearchBooksDto>, t: Throwable) {
 
@@ -77,19 +96,11 @@ class MainActivity : AppCompatActivity() {
                         it.books.forEach { book ->
                             Log.d(TAG, book.toString())
                         }
+                        adapter.submitList(it.books)
                     }
                 }
 
             })
-
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
-
-//        findViewById<RecyclerView>(R.id.recyclerView).layoutManager = LinearLayoutManager(this)
-//        findViewById<RecyclerView>(R.id.recyclerView).adapter = adapter
-
-
-
     }
 
     companion object {

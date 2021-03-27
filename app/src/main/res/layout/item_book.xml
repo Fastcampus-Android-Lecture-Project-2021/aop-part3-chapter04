@@ -1,16 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/coverImageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:background="@drawable/background_gray_stroke_radius_8"
+        android:contentDescription="@string/a11y_book_cover"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
     <TextView
         android:id="@+id/titleTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:lines="1"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/coverImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        tools:text="안드로이드 마스터하기" />
+
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:ellipsize="end"
+        android:maxLines="3"
+        app:layout_constraintTop_toBottomOf="@id/titleTextView"
+        app:layout_constraintStart_toStartOf="@id/titleTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="더운지라 풀밭에 유소년에게서 현저하게 시들어 스며들어 동력은 그러므로 소금이라 있으랴? 위하여서 것은 광야에서 기관과 약동하다. 찬미를 끓는 같지 얼음과 이상의 가는 봄바람이다. 열락의 생명을 있는 끝에 웅대한 얼음과 꽃이 황금시대다. 돋고, 위하여 위하여, 청춘 장식하는 할지니, 때까지 날카로우나 이것이다. 풍부하게 목숨이 일월과 아름답고 피어나는 끓는 반짝이는 싹이 것이다. 고행을 수 영락과 피는 돋고, 능히 살았으며, 튼튼하며, 귀는 그리하였는가? 싶이 이상을 이상이 인간은 하는 있는 그러므로 얼마나 위하여, 것이다. 기관과 얼마나 인생의 바이며, 얼마나 불어 부패뿐이다." />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

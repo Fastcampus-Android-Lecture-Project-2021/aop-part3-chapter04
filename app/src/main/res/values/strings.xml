@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">aop-part3-chapter4</string>
+    <string name="a11y_book_cover">책 표지</string>
+    <string name="search_hint">검색어를 입력하세요</string>
 </resources>
