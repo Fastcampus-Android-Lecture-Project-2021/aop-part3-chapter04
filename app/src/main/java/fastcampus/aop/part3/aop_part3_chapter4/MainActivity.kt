@@ -1,6 +1,7 @@
 package fastcampus.aop.part3.aop_part3_chapter4
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.KeyEvent
@@ -44,7 +45,11 @@ class MainActivity : AppCompatActivity() {
             "historyDB"
         ).build()
 
-        adapter = BookAdapter()
+        adapter = BookAdapter(clickListener = {
+            val intent = Intent(this, DetailActivity::class.java)
+            intent.putExtra("bookModel", it)
+            startActivity(intent)
+        })
         historyAdapter = HistoryAdapter(historyDeleteClickListener = {
             deleteSearchKeyword(it)
         })

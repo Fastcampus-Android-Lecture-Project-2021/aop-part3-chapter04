@@ -9,7 +9,7 @@ import com.bumptech.glide.Glide
 import fastcampus.aop.part3.aop_part3_chapter4.databinding.ItemBookBinding
 import fastcampus.aop.part3.aop_part3_chapter4.model.Book
 
-class BookAdapter : ListAdapter<Book, BookAdapter.ViewHolder>(diffUtil) {
+class BookAdapter(val clickListener: (Book) -> Unit) : ListAdapter<Book, BookAdapter.ViewHolder>(diffUtil) {
 
     inner class ViewHolder(private val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
 
@@ -22,6 +22,10 @@ class BookAdapter : ListAdapter<Book, BookAdapter.ViewHolder>(diffUtil) {
                 .with(binding.coverImageView.context)
                 .load(bookModel.coverSmallUrl)
                 .into(binding.coverImageView)
+
+            binding.root.setOnClickListener {
+                clickListener(bookModel)
+            }
         }
 
     }
