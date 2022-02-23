@@ -43,7 +43,8 @@ class MainActivity : AppCompatActivity() {
             applicationContext,
             AppDatabase::class.java,
             "historyDB"
-        ).build()
+        )
+            .build()
 
         adapter = BookAdapter(clickListener = {
             val intent = Intent(this, DetailActivity::class.java)
@@ -61,24 +62,24 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         service = retrofit.create(BookAPI::class.java)
-        service.getBestSeller(getString(R.string.interpark_apikey))
-            .enqueue(object: Callback<BestSellerDto> {
-                override fun onFailure(call: Call<BestSellerDto>, t: Throwable) {
-
-                }
-
-                override fun onResponse(call: Call<BestSellerDto>, response: Response<BestSellerDto>) {
-                    if (response.isSuccessful.not()) {
-                        return
-                    }
-
-                    response.body()?.let {
-                        adapter.submitList(it.books)
-                    }
-                }
-
-            })
-
+//        service.getBestSeller(getString(R.string.interpark_apikey))
+//            .enqueue(object: Callback<BestSellerDto> {
+//                override fun onFailure(call: Call<BestSellerDto>, t: Throwable) {
+//
+//                }
+//
+//                override fun onResponse(call: Call<BestSellerDto>, response: Response<BestSellerDto>) {
+//                    if (response.isSuccessful.not()) {
+//                        return
+//                    }
+//
+//                    response.body()?.let {
+//                        adapter.submitList(it.books)
+//                    }
+//                }
+//
+//            })
+//
 
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
@@ -111,8 +112,12 @@ class MainActivity : AppCompatActivity() {
     private fun search(text: String) {
 
 
-        service.getBooksByName(getString(R.string.interpark_apikey), text)
-            .enqueue(object: Callback<SearchBooksDto> {
+        service.getBooksByName(
+            getString(R.string.naver_id),
+            getString(R.string.naver_secret_key),
+            text
+        )
+            .enqueue(object : Callback<SearchBooksDto> {
                 override fun onFailure(call: Call<SearchBooksDto>, t: Throwable) {
                     hideHistoryView()
                 }
@@ -126,9 +131,10 @@ class MainActivity : AppCompatActivity() {
                         return
                     }
 
-                    response.body()?.let {
-                        adapter.submitList(it.books)
-                    }
+                    response.body()
+                        ?.let {
+                            adapter.submitList(it.books)
+                        }
                 }
 
             })
@@ -136,12 +142,15 @@ class MainActivity : AppCompatActivity() {
 
     private fun showHistoryView() {
         Thread(Runnable {
-            db.historyDao().getAll().reversed().run {
-                runOnUiThread {
-                    binding.historyRecyclerView.isVisible = true
-                    historyAdapter.submitList(this)
+            db.historyDao()
+                .getAll()
+                .reversed()
+                .run {
+                    runOnUiThread {
+                        binding.historyRecyclerView.isVisible = true
+                        historyAdapter.submitList(this)
+                    }
                 }
-            }
 
         }).start()
 
@@ -153,19 +162,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun saveSearchKeyword(keyword: String) {
         Thread(Runnable {
-            db.historyDao().insertHistory(History(null, keyword))
+            db.historyDao()
+                .insertHistory(History(null, keyword))
         }).start()
     }
 
     private fun deleteSearchKeyword(keyword: String) {
         Thread(Runnable {
-            db.historyDao().delete(keyword)
+            db.historyDao()
+                .delete(keyword)
             showHistoryView()
         }).start()
     }
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val BASE_URL = "https://book.interpark.com/"
+        private const val BASE_URL = "https://openapi.naver.com/"
     }
 }

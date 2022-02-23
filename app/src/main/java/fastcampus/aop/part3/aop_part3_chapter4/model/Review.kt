@@ -6,6 +6,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Review(
-    @PrimaryKey val uid: Int?,
+    @PrimaryKey val isbn: String,
     @ColumnInfo(name = "review") val review: String?
 )
